@@ -1,0 +1,20 @@
+{
+  "name": "email-validator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "esbuild src/index.ts --bundle --outfile=dist/main.js --platform=node --sourcemap",
+    "dev": "concurrently \"esbuild src/index.ts --bundle --outfile=dist/main.js --platform=node --sourcemap --watch\" \"nodemon dist/main.js\"",
+    "start": "nodemon dist/main.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "esbuild": "^0.19.11",
+    "nodemon": "^3.0.2",
+    "typescript": "^5.3.3"
+  }
+}
