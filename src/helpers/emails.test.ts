@@ -35,7 +35,7 @@ describe("validateEmail", () => {
   });
 
   test("should return false for an invalid email with invalid characters", () => {
-    const invalidEmail = `${faker.word.noun()}@${faker.internet.domainSuffix()}${faker.string.alphanumeric()}.com`;
+    const invalidEmail = `${faker.word.noun()}@${faker.internet.domainSuffix()}${faker.string.symbol()}.com`;
     const isValid = validateEmail(invalidEmail);
     expect(isValid).toBe(false);
   });
