@@ -1,4 +1,4 @@
-import { validateEmail, validateDomain } from "./emails";
+import { validateEmail, validateDomain, extractDomainName } from "./emails";
 import { faker } from "@faker-js/faker";
 import dns from "node:dns/promises";
 jest.mock("node:dns/promises");
@@ -71,5 +71,32 @@ describe("validateDomain", () => {
     );
     const invalidDomain = "invalid.com";
     await expect(validateDomain(invalidDomain)).resolves.not.toThrow();
+  });
+});
+
+describe("extractDomainName", () => {
+  test("should return the domain name from a valid email", () => {
+    const fakeDomain = faker.internet.domainName();
+    const email = `${faker.internet.userName()}@${fakeDomain}`;
+    const domain = extractDomainName(email);
+    expect(domain).toBe(fakeDomain);
+  });
+
+  test("should return the domain name from an email with subdomain", () => {
+    const email = "user@subdomain.domain.com";
+    const domain = extractDomainName(email);
+    expect(domain).toBe("subdomain.domain.com");
+  });
+
+  test("should return empty string for an email without domain", () => {
+    const email = `${faker.internet.userName()}@`;
+    const domain = extractDomainName(email);
+    expect(domain).toBe("");
+  });
+
+  test("should return undefined for a string without @", () => {
+    const email = faker.word.noun();
+    const domain = extractDomainName(email);
+    expect(domain).toBeUndefined();
   });
 });

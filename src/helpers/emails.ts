@@ -25,3 +25,12 @@ export async function validateDomain(domain: string): Promise<boolean> {
   }
   return validDomain;
 }
+
+/**
+ * Extract domain name from email
+ * @param email email to extract domain name from
+ * @returns domain name
+ */
+export function extractDomainName(email: string): string {
+  return email.split("@")[1];
+}
