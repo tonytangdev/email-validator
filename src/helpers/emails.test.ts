@@ -1,5 +1,7 @@
-import { validateEmail } from "./emails";
+import { validateEmail, validateDomain } from "./emails";
 import { faker } from "@faker-js/faker";
+import dns from "node:dns/promises";
+jest.mock("node:dns/promises");
 
 describe("validateEmail", () => {
   test("should return true for a valid email", () => {
@@ -42,5 +44,32 @@ describe("validateEmail", () => {
     const invalidEmail = `${faker.word.noun()}@.com`;
     const isValid = validateEmail(invalidEmail);
     expect(isValid).toBe(false);
+  });
+});
+
+describe("validateDomain", () => {
+  test("should return true for a valid domain", async () => {
+    (dns.lookup as jest.Mock).mockImplementation(
+      () => new Promise((resolve) => resolve(null))
+    );
+    const validDomain = "google.com";
+    const isValid = await validateDomain(validDomain);
+    expect(isValid).toBe(true);
+  });
+
+  test("should return false for an invalid domain", async () => {
+    (dns.lookup as jest.Mock).mockImplementation(
+      () => new Promise((_, reject) => reject(null))
+    );
+    const invalidDomain = "invalid.com";
+    const isValid = await validateDomain(invalidDomain);
+    expect(isValid).toBe(false);
+  });
+  test("should not throw an error for an invalid domain", async () => {
+    (dns.lookup as jest.Mock).mockImplementation(
+      () => new Promise((_, reject) => reject(null))
+    );
+    const invalidDomain = "invalid.com";
+    await expect(validateDomain(invalidDomain)).resolves.not.toThrow();
   });
 });
